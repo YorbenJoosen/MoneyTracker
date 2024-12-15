@@ -4,6 +4,9 @@ import main.app.database.abstractDatabase.AbstractDatabaseFactory;
 import main.app.database.abstractDatabase.AbstractPersonDatabase;
 import main.app.database.abstractDatabase.AbstractTicketDatabase;
 import main.app.database.inMemoryDatabase.InMemoryDatabaseFactory;
+import main.app.ticket.Ticket;
+
+import java.util.ArrayList;
 
 public class DatabaseFacade {
     private static DatabaseFacade instance;
@@ -24,5 +27,14 @@ public class DatabaseFacade {
             instance = new DatabaseFacade(factory);
         }
         return instance;
+    }
+
+    public void storeTicket(Ticket ticket) {
+        // TODO
+    }
+
+    public ArrayList<Ticket> fetchAllTickets() {
+        // TODO
+        return null;
     }
 }
