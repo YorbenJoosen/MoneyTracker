@@ -1,5 +1,14 @@
 package main.app.database.abstractDatabase;
 
-abstract public class AbstractDatabase {
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 
+abstract public class AbstractDatabase {
+    private final PropertyChangeSupport support = new PropertyChangeSupport(this);
+
+    protected AbstractDatabase() {}
+
+    public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+        support.addPropertyChangeListener(propertyName, listener);
+    }
 }

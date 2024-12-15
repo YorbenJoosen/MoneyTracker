@@ -5,12 +5,12 @@ import main.app.database.abstractDatabase.AbstractDatabaseFactory;
 public class InMemoryDatabaseFactory extends AbstractDatabaseFactory {
 
     @Override
-    public InMemoryTicketDatabase getTicketDatabase() {
-        return null;
+    public InMemoryTicketDatabase createTicketDatabase() {
+        return new InMemoryTicketDatabase();
     }
 
     @Override
-    public InMemoryPersonDatabase getPersonDatabase() {
-        return null;
+    public InMemoryPersonDatabase createPersonDatabase() {
+        return new InMemoryPersonDatabase();
     }
 }
