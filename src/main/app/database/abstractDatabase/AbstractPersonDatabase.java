@@ -1,4 +1,4 @@
 package main.app.database.abstractDatabase;
 
-public class AbstractPersonDatabase {
+public class AbstractPersonDatabase extends AbstractDatabase {
 }

@@ -1,4 +1,4 @@
 package main.app.database.abstractDatabase;
 
-public class AbstractTicketDatabase {
+public class AbstractTicketDatabase extends AbstractDatabase{
 }
