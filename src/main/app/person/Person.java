@@ -13,5 +13,4 @@ public class Person extends InputPerson {
     public UUID getId() {
         return id;
     }
-
 }

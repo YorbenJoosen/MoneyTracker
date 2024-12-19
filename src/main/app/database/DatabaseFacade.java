@@ -91,4 +91,13 @@ public class DatabaseFacade {
     public void addPerson(Person person) {
         this.personDatabase.addPerson(person);
     }
+    public void addTicket(Ticket ticket) {
+        this.ticketDatabase.addTicket(ticket);
+    }
+    public Person getPersonViaUUID(UUID id) {
+        return personDatabase.getPersonViaUUID(id);
+    }
+    public Person getPersonViaName(String name) {
+        return personDatabase.getPersonViaName(name);
+    }
 }

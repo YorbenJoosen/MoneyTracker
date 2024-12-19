@@ -14,7 +14,15 @@ abstract public class AbstractPersonDatabase extends AbstractDatabase {
 
     public ArrayList<Person> getPersons() {
         return new ArrayList<>(personMap.values());    }
-    public Person getPerson(UUID id) {
+    public Person getPersonViaUUID(UUID id) {
         return personMap.get(id);
+    }
+    public Person getPersonViaName(String name) {
+        for (Person person : personMap.values()) {
+            if (person.getName().equals(name)) {
+                return person;
+            }
+        }
+        return null;
     }
 }

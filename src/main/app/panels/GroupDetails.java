@@ -109,7 +109,12 @@ public class GroupDetails extends JPanel {
     }
 
     private void addTicket() {
-        // Implement the logic to add a ticket to the group
+        JFrame addTicketFrame = new JFrame("Add Ticket");
+        addTicketFrame.setSize(400, 300);
+
+        AddTicket addTicketPanel = new AddTicket(databaseFacade, group);
+        addTicketFrame.add(addTicketPanel);
+        addTicketFrame.setVisible(true);
     }
 
     private void addPerson() {
@@ -119,9 +124,11 @@ public class GroupDetails extends JPanel {
         // Check if user pressed "OK" and entered a non-empty group name
         if (personName != null && !personName.trim().isEmpty()) {
             // Save the person to the database
-            Person person = new Person(personName);
-            group.addPerson(person);
-            databaseFacade.addPerson(person);
+            Person newPerson = new Person(personName);
+            group.addPerson(newPerson);
+            if (databaseFacade.getPersonViaName(personName) != null) {
+                databaseFacade.addPerson(newPerson);
+            }
             JOptionPane.showMessageDialog(frame, "Person '" + personName + "' added!");
         } else {
             // Optionally, show a message if no valid input was provided
