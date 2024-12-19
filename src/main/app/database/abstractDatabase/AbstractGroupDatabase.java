@@ -10,6 +10,7 @@ public class AbstractGroupDatabase extends AbstractDatabase {
     private final HashMap<UUID, Group> groupMap = new HashMap<>();
     public void addGroup(Group group) {
         groupMap.put(group.getId(), group);
+        this.support.firePropertyChange("group", null, group);
     }
 
     public ArrayList<Group> getGroups() {
