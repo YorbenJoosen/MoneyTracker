@@ -1,10 +1,17 @@
 package main.app.person;
 
-public class Person extends InputPerson {
-    private final int id;
+import java.util.UUID;
 
-    public Person(int id, String name) {
+public class Person extends InputPerson {
+    private final UUID id;
+
+    public Person(String name) {
         super(name);
-        this.id = id;
+        this.id = UUID.randomUUID();
     }
+
+    public UUID getId() {
+        return id;
+    }
+
 }

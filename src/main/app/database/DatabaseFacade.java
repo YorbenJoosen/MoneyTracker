@@ -1,33 +1,34 @@
 package main.app.database;
 
 import main.app.database.abstractDatabase.AbstractDatabaseFactory;
+import main.app.database.abstractDatabase.AbstractGroupDatabase;
 import main.app.database.abstractDatabase.AbstractPersonDatabase;
 import main.app.database.abstractDatabase.AbstractTicketDatabase;
 import main.app.database.inMemoryDatabase.InMemoryDatabaseFactory;
+import main.app.group.Group;
 import main.app.observers.DatabaseUpdateListener;
 import main.app.person.Person;
 import main.app.ticket.Ticket;
 import main.app.ticket.Transaction;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class DatabaseFacade {
     private static volatile DatabaseFacade instance;
 
     private final AbstractPersonDatabase personDatabase;
     private final AbstractTicketDatabase ticketDatabase;
-    private final DatabaseUpdateListener personDatabaseListener;
-    private final DatabaseUpdateListener ticketDatabaseListener;
+    private final AbstractGroupDatabase groupDatabase;
 
     private DatabaseFacade(AbstractDatabaseFactory databaseFactory) {
         // Private constructor
         this.personDatabase = databaseFactory.createPersonDatabase();
-        this.personDatabaseListener = new DatabaseUpdateListener(this.personDatabase);
+        new DatabaseUpdateListener(this.personDatabase);
         this.ticketDatabase = databaseFactory.createTicketDatabase();
-        this.ticketDatabaseListener = new DatabaseUpdateListener(this.ticketDatabase);
+        new DatabaseUpdateListener(this.ticketDatabase);
+        this.groupDatabase = databaseFactory.createGroupDatabase();
+        new DatabaseUpdateListener(this.groupDatabase);
+
     }
 
     public static DatabaseFacade getInstance() {
@@ -68,5 +69,26 @@ public class DatabaseFacade {
 
         // TODO
         return null;
+    }
+    public void addGroup(String name) {
+        this.groupDatabase.addGroup(new Group(name));
+    }
+    public ArrayList<Group> getGroups() {
+        return this.groupDatabase.getGroups();
+    }
+    public ArrayList<Person> getPersons() {
+        return this.personDatabase.getPersons();
+    }
+    public ArrayList<Person> getPersonsFromGroup(UUID id) {
+        return this.groupDatabase.getGroup(id).getPersons();
+    }
+    public Group getGroup(UUID id) {
+        return this.groupDatabase.getGroup(id);
+    }
+    public ArrayList<Ticket> getTickets(UUID id) {
+        return this.groupDatabase.getGroup(id).getTickets();
+    }
+    public void addPerson(Person person) {
+        this.personDatabase.addPerson(person);
     }
 }

@@ -2,15 +2,13 @@ package main.app.ticket;
 
 import main.app.person.Person;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Ticket {
     private final String ticketName;
     private final TicketType ticketType;
     private final Person owner;
+    private final UUID id;
 
     // All transactions in a ticket form a Weighted Graph
     private final List<Transaction> personPriceList;
@@ -20,6 +18,7 @@ public class Ticket {
         this.ticketName = ticketName;
         this.ticketType = ticketType;
         this.personPriceList = personPriceList;
+        this.id = UUID.randomUUID();
     }
 
     public static Ticket create_equal_list(Person owner, String ticketName, Integer totalPrice, List<Person> persons, TicketType ticketType) {
@@ -41,5 +40,25 @@ public class Ticket {
         }
 
         return new Ticket(owner, ticketName, ticketType, personPriceList);
+    }
+
+    public String getTicketName() {
+        return ticketName;
+    }
+
+    public TicketType getTicketType() {
+        return ticketType;
+    }
+
+    public Person getOwner() {
+        return owner;
+    }
+
+    public List<Transaction> getPersonPriceList() {
+        return personPriceList;
+    }
+
+    public UUID getId() {
+        return id;
     }
 }

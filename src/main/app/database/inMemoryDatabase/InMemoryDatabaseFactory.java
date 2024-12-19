@@ -13,4 +13,8 @@ public class InMemoryDatabaseFactory extends AbstractDatabaseFactory {
     public InMemoryPersonDatabase createPersonDatabase() {
         return new InMemoryPersonDatabase();
     }
+
+    @Override
+    public InMemoryGroupDatabase createGroupDatabase() {return new InMemoryGroupDatabase();}
+
 }
