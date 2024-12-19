@@ -40,7 +40,7 @@ public class AddTicket extends JPanel {
 
         // Ticket owner selection
         JLabel ownerLabel = new JLabel("Ticket Owner:");
-        ArrayList<Person> persons = databaseFacade.getPersons();  // Get list of all persons
+        ArrayList<Person> persons = group.getPersons();  // Get list of all persons
         DefaultComboBoxModel<String> ownerModel = new DefaultComboBoxModel<>();
         for (Person person : persons) {
             ownerModel.addElement(person.getName());
@@ -50,9 +50,8 @@ public class AddTicket extends JPanel {
         add(ownerComboBox);
 
         // Tags selection (multi-select)
-        JLabel tagsLabel = new JLabel("Select Tags:");
-        String[] tags = {"Urgent", "New", "VIP", "Discount", "Priority"};
-        tagsList = new JList<>(tags);
+        JLabel tagsLabel = new JLabel("Select debters:");
+        tagsList = new JList<>((ListModel) persons);
         tagsList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         JScrollPane tagsScrollPane = new JScrollPane(tagsList);
         add(tagsLabel);
@@ -77,13 +76,7 @@ public class AddTicket extends JPanel {
         }
 
         // Find the owner by name
-        Person owner = null;
-        for (Person person : databaseFacade.getPersons()) {
-            if (person.getName().equals(ownerName)) {
-                owner = person;
-                break;
-            }
-        }
+        Person owner = databaseFacade.getPersonViaName(ownerName);
 
         if (owner == null) {
             JOptionPane.showMessageDialog(this, "Owner not found.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -91,10 +84,10 @@ public class AddTicket extends JPanel {
         }
 
         // Get selected tags
-        ArrayList<String> selectedTags = tagsList.getSelectedValuesList();
+        //ArrayList<String> personPriceList = tagsList.getSelectedValuesList();
 
         // Create the new ticket
-        Ticket newTicket = new Ticket(ticketName, ticketType, owner, selectedTags);
+        Ticket newTicket = new Ticket(owner, ticketName, ticketType, transaction);
 
         // Add the ticket to the group
         group.addTicket(newTicket);
