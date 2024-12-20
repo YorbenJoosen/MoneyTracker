@@ -5,64 +5,56 @@ import main.app.group.Group;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.UUID;
 
 public class ShowGroups extends JPanel {
     private final DatabaseFacade databaseFacade;
 
     public ShowGroups(DatabaseFacade databaseFacade, JFrame frame) {
         this.databaseFacade = databaseFacade;
-        ArrayList<Group> groups = databaseFacade.getGroups();
 
         // Show message and return if no groups exist
-        if (groups.isEmpty()) {
+        if (databaseFacade.getGroups().isEmpty()) {
             JOptionPane.showMessageDialog(frame, "No groups available yet.", "No Groups", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
 
         // Create frame only if there are groups
         JFrame groupsFrame = new JFrame("Groups");
-        groupsFrame.setSize(400, 300);
+        groupsFrame.setSize(1920, 1080);
         groupsFrame.setLayout(new BorderLayout());
-        DefaultListModel<String> groupListModel = new DefaultListModel<>();
 
-        for (Group group : groups) {
-            groupListModel.addElement(group.getId() + ": " + group.getName());
-        }
-
-        JList<String> groupList = getStringJList(groupListModel);
-
-        groupsFrame.add(new JScrollPane(groupList), BorderLayout.CENTER);
-        groupsFrame.setVisible(true);
-    }
-
-    private JList<String> getStringJList(DefaultListModel<String> groupListModel) {
-        JList<String> groupList = new JList<>(groupListModel);
-        groupList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        // Create selection field of groups
+        DefaultListModel<Group> groupListModel = new DefaultListModel<>();
+        JList<Group> groupSelector = new JList<>(groupListModel);
+        databaseFacade.getGroups().forEach(groupListModel::addElement);
 
         // Add double-click listener to navigate to group details
-        groupList.addMouseListener(new java.awt.event.MouseAdapter() {
+        groupSelector.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 if (evt.getClickCount() == 2) {
-                    String selectedGroup = groupList.getSelectedValue();
+                    Group selectedGroup = groupSelector.getSelectedValue();
+                    // Check if a group is selected
                     if (selectedGroup != null) {
-                        // Extract group ID from the string (before the ":")
-                        String groupId = selectedGroup.split(":")[0].trim();
-                        showGroupDetails(UUID.fromString(groupId)); // Pass the extracted ID
+                        // Show group details of the selected group
+                        showGroupDetails(selectedGroup);
                     }
                 }
             }
         });
-        return groupList;
+        // Add selection field to the frame
+        groupsFrame.add(new JScrollPane(groupSelector), BorderLayout.CENTER);
+        groupsFrame.setVisible(true);
     }
 
-    private void showGroupDetails(UUID groupId) {
-        Group group = databaseFacade.getGroup(groupId);
+    private void showGroupDetails(Group group) {
+        // Create new frame
         JFrame groupDetailsFrame = new JFrame("Group: " + group.getName());
-        groupDetailsFrame.setSize(400, 400);
+        groupDetailsFrame.setSize(1920, 1080);
 
+        // Create new panel
         GroupDetails groupDetailsPanel = new GroupDetails(databaseFacade, group, groupDetailsFrame);
+
+        // Add panel to the frame
         groupDetailsFrame.add(groupDetailsPanel);
         groupDetailsFrame.setVisible(true);
     }

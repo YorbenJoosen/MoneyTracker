@@ -11,7 +11,7 @@ public class ViewFrame {
     public ViewFrame(DatabaseFacade databaseFacade) {
         JFrame frame = new JFrame("Homepage");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 300);
+        frame.setSize(1920, 1080);
         frame.setLayout(new BorderLayout());
 
         // Create the main panel for navigation

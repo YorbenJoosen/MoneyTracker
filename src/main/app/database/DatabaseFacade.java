@@ -76,17 +76,8 @@ public class DatabaseFacade {
     public ArrayList<Group> getGroups() {
         return this.groupDatabase.getGroups();
     }
-    public ArrayList<Person> getPersons() {
+    public ArrayList<Person> getAllPersons() {
         return this.personDatabase.getPersons();
-    }
-    public ArrayList<Person> getPersonsFromGroup(UUID id) {
-        return this.groupDatabase.getGroup(id).getPersons();
-    }
-    public Group getGroup(UUID id) {
-        return this.groupDatabase.getGroup(id);
-    }
-    public ArrayList<Ticket> getTickets(UUID id) {
-        return this.groupDatabase.getGroup(id).getTickets();
     }
     public void addPerson(Person person) {
         this.personDatabase.addPerson(person);
@@ -100,4 +91,8 @@ public class DatabaseFacade {
     public Person getPersonViaName(String name) {
         return personDatabase.getPersonViaName(name);
     }
+    public Ticket getTicketViaUUID(UUID id) {
+        return ticketDatabase.getTicketViaUUID(id);
+    }
+
 }

@@ -12,4 +12,25 @@ public class Transaction {
         this.rhsPerson = rhsPerson;
         this.amount = amount;
     }
+
+    public Person getLhsPerson() {
+        return lhsPerson;
+    }
+
+    public Person getRhsPerson() {
+        return rhsPerson;
+    }
+
+    public Integer getAmount() {
+        return amount;
+    }
+
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "lhsPerson=" + lhsPerson +
+                ", rhsPerson=" + rhsPerson +
+                ", amount=" + amount +
+                '}';
+    }
 }

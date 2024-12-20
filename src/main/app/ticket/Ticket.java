@@ -61,4 +61,15 @@ public class Ticket {
     public UUID getId() {
         return id;
     }
+
+    @Override
+    public String toString() {
+        return "Ticket{" +
+                "ticketName='" + ticketName + '\'' +
+                ", ticketType=" + ticketType +
+                ", owner=" + owner +
+                ", id=" + id +
+                ", personPriceList=" + personPriceList +
+                '}';
+    }
 }

@@ -33,7 +33,7 @@ public class MainMenu extends JPanel {
     }
 
     private void showPersons() {
-        ArrayList<Person> persons = databaseFacade.getPersons();
+        ArrayList<Person> persons = databaseFacade.getAllPersons();
 
         // Show message and return if no persons exist
         if (persons.isEmpty()) {
@@ -43,7 +43,7 @@ public class MainMenu extends JPanel {
 
         // Create frame only if there are persons
         JFrame personsFrame = new JFrame("Persons");
-        personsFrame.setSize(400, 300);
+        personsFrame.setSize(1920, 1080);
         DefaultListModel<String> personListModel = new DefaultListModel<>();
 
         for (Person person : persons) {
@@ -59,7 +59,9 @@ public class MainMenu extends JPanel {
     private void addGroup() {
         String groupName = JOptionPane.showInputDialog(this, "Enter Group Name:");
 
+        // Check if user pressed "OK" and entered a non-empty group name
         if (groupName != null && !groupName.trim().isEmpty()) {
+            // Add group to the database
             databaseFacade.addGroup(groupName);
             JOptionPane.showMessageDialog(this, "Group '" + groupName + "' added!");
         } else {

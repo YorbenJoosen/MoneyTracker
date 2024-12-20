@@ -13,4 +13,13 @@ public class Person extends InputPerson {
     public UUID getId() {
         return id;
     }
+
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "id=" + id +
+                "name=" + super.getName() +
+                '}';
+    }
 }

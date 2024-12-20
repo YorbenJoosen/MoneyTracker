@@ -1,5 +1,6 @@
 package main.app.group;
 
+import main.app.database.DatabaseFacade;
 import main.app.person.Person;
 import main.app.ticket.Ticket;
 
@@ -9,8 +10,8 @@ import java.util.UUID;
 public class Group {
     private String name;
     private final UUID id;
-    private final ArrayList<Person> persons = new ArrayList<>();
-    private final ArrayList<Ticket> tickets = new ArrayList<>();
+    private final ArrayList<UUID> personsUUIDs = new ArrayList<>();
+    private final ArrayList<UUID> ticketsUUIDs = new ArrayList<>();
 
     public Group(String name) {
         this.id = UUID.randomUUID();
@@ -24,26 +25,46 @@ public class Group {
     public UUID getId() {
         return id;
     }
+    public void addPerson(UUID id) {
+        this.personsUUIDs.add(id);
+    }
+    public ArrayList<UUID> getPersonsUUIDs() {
+        return this.personsUUIDs;
+    }
+    public ArrayList<Person> getPersons(DatabaseFacade databaseFacade) {
+        ArrayList<Person> persons = new ArrayList<>();
+        for (UUID id : this.personsUUIDs) {
+            persons.add(databaseFacade.getPersonViaUUID(id));
+        }
+        return persons;
+    }
+    public void addTicket(UUID id) {
+        this.ticketsUUIDs.add(id);
+    }
+    public ArrayList<Ticket> getTickets(DatabaseFacade databaseFacade) {
+        ArrayList<Ticket> tickets = new ArrayList<>();
+        for (UUID id : this.ticketsUUIDs) {
+            tickets.add(databaseFacade.getTicketViaUUID(id));
+        }
+        return tickets;
+    }
+    public boolean checkIfPersonExists(UUID id) {
+        return this.personsUUIDs.contains(id);
+    }
 
     public void setName(String name) {
         this.name = name;
     }
-    public void addPerson(Person person) {
-        this.persons.add(person);
+
+    public ArrayList<UUID> getTicketsUUIDs() {
+        return ticketsUUIDs;
     }
-    public void removePerson(Person person) {
-        this.persons.remove(person);
-    }
-    public ArrayList<Person> getPersons() {
-        return this.persons;
-    }
-    public void addTicket(Ticket ticket) {
-        this.tickets.add(ticket);
-    }
-    public void removeTicket(Ticket ticket) {
-        this.tickets.remove(ticket);
-    }
-    public ArrayList<Ticket> getTickets() {
-        return this.tickets;
+
+    @Override
+    public String toString() {
+        return "Group{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
     }
 }
