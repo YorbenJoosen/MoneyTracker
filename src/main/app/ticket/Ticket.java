@@ -45,10 +45,10 @@ public class Ticket {
     public Integer getPriceOfPerson(Person person) {
         Optional<Transaction> transaction = this.personPriceList.
                 stream().
-                filter(trans -> trans.rhsPerson.getName().equals(person.getName())).
+                filter(trans -> trans.rhsPerson().getName().equals(person.getName())).
                 findFirst();
         if (transaction.isPresent()) {
-            return transaction.get().amount;
+            return transaction.get().amount();
         }
         return 0;
     }

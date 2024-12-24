@@ -12,9 +12,7 @@ import main.app.ticket.Ticket;
 import main.app.ticket.Transaction;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
-import static java.lang.Integer.min;
 import static java.lang.Math.abs;
 
 public class DatabaseFacade {
@@ -68,16 +66,16 @@ public class DatabaseFacade {
     public Integer totalIncomingForPerson(Person person) {
         return this.getAllTransactions().
                 stream().
-                filter(transaction -> transaction.lhsPerson.equals(person)).
-                map(transaction -> transaction.amount).
+                filter(transaction -> transaction.lhsPerson().equals(person)).
+                map(transaction -> transaction.amount()).
                 reduce(0, Integer::sum);
     }
 
     public Integer totalOutgoingForPerson(Person person) {
         return this.getAllTransactions().
                 stream().
-                filter(transaction -> transaction.rhsPerson.equals(person)).
-                map(transaction -> transaction.amount).
+                filter(transaction -> transaction.rhsPerson().equals(person)).
+                map(transaction -> transaction.amount()).
                 reduce(0, Integer::sum);
     }
 
@@ -86,19 +84,19 @@ public class DatabaseFacade {
     }
 
     public Integer largestOutgoing(ArrayList<Transaction> transactions) {
-        return transactions.stream().map(Transaction::getAmount).max(Integer::compareTo).orElse(0);
+        return transactions.stream().map(Transaction::amount).max(Integer::compareTo).orElse(0);
     }
 
     public Integer largestIncoming(ArrayList<Transaction> transactions) {
-        return transactions.stream().map(Transaction::getAmount).min(Integer::compareTo).orElse(0);
+        return transactions.stream().map(Transaction::amount).min(Integer::compareTo).orElse(0);
     }
 
     public Optional<Person> personWithLargestOutgoing(ArrayList<Transaction> transactions) {
-        return transactions.stream().max(Comparator.comparing(transaction -> transaction.amount)).map(transaction -> transaction.rhsPerson);
+        return transactions.stream().max(Comparator.comparing(transaction -> transaction.amount())).map(transaction -> transaction.rhsPerson());
     }
 
     public Optional<Person> personWithLargestIncoming(ArrayList<Transaction> transactions) {
-        return transactions.stream().max(Comparator.comparing(transaction -> transaction.amount)).map(transaction -> transaction.lhsPerson);
+        return transactions.stream().max(Comparator.comparing(transaction -> transaction.amount())).map(transaction -> transaction.lhsPerson());
     }
 
     public ArrayList<Transaction> calcTallyNaive(ArrayList<Transaction> transactions) {
