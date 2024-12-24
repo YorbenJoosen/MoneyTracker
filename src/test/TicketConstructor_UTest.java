@@ -23,11 +23,6 @@ public class TicketConstructor_UTest {
 
     }
 
-    @Before
-    public void initialize() {
-
-    }
-
     String OWNER_NAME = "TicketConstructor_Owner";
     Person owner = new Person(OWNER_NAME);
 
