@@ -12,6 +12,10 @@ import main.app.ticket.Ticket;
 import main.app.ticket.Transaction;
 
 import java.util.*;
+import java.util.stream.Collectors;
+
+import static java.lang.Integer.min;
+import static java.lang.Math.abs;
 
 public class DatabaseFacade {
     private static volatile DatabaseFacade instance;
@@ -53,21 +57,113 @@ public class DatabaseFacade {
         return null;
     }
 
-    private static long getMin(ArrayList<Transaction> transactions) {
-        // Returns index of smallest
-        return transactions.stream().min((i, j) -> Math.min(i.amount,j.amount)).map(transactions::indexOf).orElse(0);
+    public ArrayList<Transaction> getAllTransactions() {
+        ArrayList<Transaction> result = new ArrayList<>();
+        for (Ticket ticket : fetchAllTickets()) {
+            result.addAll(ticket.getPersonPriceList());
+        }
+        return result;
     }
-    private static long getMax(ArrayList<Transaction> transactions) {
-        // Returns index of smallest
-        return transactions.stream().max((i, j) -> Math.max(i.amount,j.amount)).map(transactions::indexOf).orElse(0);
+
+    public Integer totalIncomingForPerson(Person person) {
+        return this.getAllTransactions().
+                stream().
+                filter(transaction -> transaction.lhsPerson.equals(person)).
+                map(transaction -> transaction.amount).
+                reduce(0, Integer::sum);
+    }
+
+    public Integer totalOutgoingForPerson(Person person) {
+        return this.getAllTransactions().
+                stream().
+                filter(transaction -> transaction.rhsPerson.equals(person)).
+                map(transaction -> transaction.amount).
+                reduce(0, Integer::sum);
+    }
+
+    public Integer netAmountForPerson(Person person) {
+        return totalIncomingForPerson(person) - this.totalOutgoingForPerson(person);
+    }
+
+    public Integer largestOutgoing(ArrayList<Transaction> transactions) {
+        return transactions.stream().map(Transaction::getAmount).max(Integer::compareTo).orElse(0);
+    }
+
+    public Integer largestIncoming(ArrayList<Transaction> transactions) {
+        return transactions.stream().map(Transaction::getAmount).min(Integer::compareTo).orElse(0);
+    }
+
+    public Optional<Person> personWithLargestOutgoing(ArrayList<Transaction> transactions) {
+        return transactions.stream().max(Comparator.comparing(transaction -> transaction.amount)).map(transaction -> transaction.rhsPerson);
+    }
+
+    public Optional<Person> personWithLargestIncoming(ArrayList<Transaction> transactions) {
+        return transactions.stream().max(Comparator.comparing(transaction -> transaction.amount)).map(transaction -> transaction.lhsPerson);
+    }
+
+    public ArrayList<Transaction> calcTallyNaive(ArrayList<Transaction> transactions) {
+        // https://medium.com/@mithunmk93/algorithm-behind-splitwises-debt-simplification-feature-8ac485e97688
+
+        // Collect all people in the splitwise and calculate the net cash flow (incoming - outgoing)
+        ArrayList<Person> personList = this.getAllPersons();
+        List<Integer> netCash = personList.stream().map(this::netAmountForPerson).toList();
+
+        // Seperate people in "givers" and "receivers"
+        ArrayList<Integer> givers = new ArrayList<>(); // List of indices of Person instances (referencing personList)
+        ArrayList<Integer> receivers = new ArrayList<>(); // List of indices of Person instances (referencing personList)
+        int personIndex = 0;
+        for (Person person : personList) {
+            if (netCash.get(personIndex) < 0) {
+                givers.add(personIndex);
+            } else if (netCash.get(personIndex) > 0) {
+                receivers.add(personIndex);
+            }
+            personIndex++;
+        }
+
+        // The result of this function is a series of transaction (total length shorter than input)
+        ArrayList<Transaction> resultTransactions = new ArrayList<>();
+
+        // Matching exact amounts if any exists
+//        for (Integer receiver : receivers) {
+//            for (Integer giver : givers) {
+//                if (Objects.equals(abs(netCash.get(receiver)), abs(netCash.get(giver)))) {
+//                    resultTransactions.add(new Transaction(personList.get(receiver), netCash.get(receiver), personList.get(giver)));
+//                }
+//            }
+//        }
+
+        // Loop over all receivers and givers
+        Integer receiverIndex = 0;
+        Integer toReceive = netCash.get(receiverIndex);  // Initialize with first receiver
+
+        for (Integer giverIndex : givers) {
+            Integer toGive = netCash.get(giverIndex);
+
+            // Check if we have more to give than to receive
+            // Option A
+            // Continue fetching more receivers until we satisfy condition
+            while (toReceive <= toGive) {
+                resultTransactions.add(new Transaction(personList.get(receiverIndex), toReceive, personList.get(giverIndex)));
+
+                toGive -= toReceive;
+
+                receiverIndex++;
+                toReceive = netCash.get(receiverIndex);
+            }
+
+            // Option B
+            toReceive -= toGive;
+            resultTransactions.add(new Transaction(personList.get(receiverIndex), toGive, personList.get(giverIndex)));
+        }
+
+        // Return result!
+        return resultTransactions;
     }
 
     public ArrayList<Transaction> getFinalTally() {
-        // All tickets together can be seen as a graph where each person is a Vertex and each Amount is an Edge
-        // Solution:
-        // https://www.geeksforgeeks.org/minimize-cash-flow-among-given-set-friends-borrowed-money/
 
-        // TODO
+
         return null;
     }
     public void addGroup(String name) {

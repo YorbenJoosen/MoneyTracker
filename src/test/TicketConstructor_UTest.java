@@ -48,8 +48,6 @@ public class TicketConstructor_UTest {
 
         assert ticket.getPriceOfPerson(personOne).equals(500);
         assert ticket.getPriceOfPerson(personTwo).equals(500);
-
-        // Mockito.verify(mock_db, Mockito.times(1)).addEntry(mock_employee, mock_registerEntry)
     }
 
     @Test
@@ -66,6 +64,10 @@ public class TicketConstructor_UTest {
 
         assert ticket.getPriceOfPerson(personOne).equals(personOnePrice);
         assert ticket.getPriceOfPerson(personTwo).equals(personTwoPrice);
-        // Mockito.verify(mock_db, Mockito.times(1)).addEntry(mock_employee, mock_registerEntry)
+    }
+
+    @Test
+    public void t_internal_transactions_verification() throws Exception {
+
     }
 }
