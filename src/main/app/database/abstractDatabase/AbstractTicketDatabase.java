@@ -21,4 +21,8 @@ abstract public class AbstractTicketDatabase extends AbstractDatabase{
     public Ticket getTicketViaUUID(UUID id) {
         return ticketMap.get(id);
     }
+
+    public void clear() {
+        this.ticketMap.clear();
+    }
 }

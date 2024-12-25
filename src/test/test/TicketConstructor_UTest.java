@@ -3,11 +3,7 @@ package test;
 import main.app.person.Person;
 import main.app.ticket.Ticket;
 import main.app.ticket.TicketType;
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.Arrays;
 import java.util.HashMap;

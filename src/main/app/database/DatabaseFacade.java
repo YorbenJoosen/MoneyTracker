@@ -51,8 +51,7 @@ public class DatabaseFacade {
     }
 
     public ArrayList<Ticket> fetchAllTickets() {
-        // TODO
-        return null;
+        return this.ticketDatabase.getTickets();
     }
 
     public ArrayList<Transaction> getAllTransactions() {
@@ -99,11 +98,18 @@ public class DatabaseFacade {
         return transactions.stream().max(Comparator.comparing(transaction -> transaction.amount())).map(transaction -> transaction.lhsPerson());
     }
 
-    public ArrayList<Transaction> calcTallyNaive(ArrayList<Transaction> transactions) {
+    public ArrayList<Transaction> calcTallyNaive(ArrayList<Transaction> transactions) throws Exception {
         // https://medium.com/@mithunmk93/algorithm-behind-splitwises-debt-simplification-feature-8ac485e97688
 
-        // Collect all people in the splitwise and calculate the net cash flow (incoming - outgoing)
-        ArrayList<Person> personList = this.getAllPersons();
+        if (transactions.isEmpty()) {return new ArrayList<>();} // Guard clause for empty
+
+        // Collect all people in the input transactions and calculate the net cash flow (incoming - outgoing)
+        ArrayList<Person> personList = new ArrayList<>();
+        for (Transaction transaction : transactions) {
+            personList.add(transaction.lhsPerson());
+            personList.add(transaction.rhsPerson());
+        }
+
         List<Integer> netCash = personList.stream().map(this::netAmountForPerson).toList();
 
         // Seperate people in "givers" and "receivers"
@@ -122,19 +128,9 @@ public class DatabaseFacade {
         // The result of this function is a series of transaction (total length shorter than input)
         ArrayList<Transaction> resultTransactions = new ArrayList<>();
 
-        // Matching exact amounts if any exists
-//        for (Integer receiver : receivers) {
-//            for (Integer giver : givers) {
-//                if (Objects.equals(abs(netCash.get(receiver)), abs(netCash.get(giver)))) {
-//                    resultTransactions.add(new Transaction(personList.get(receiver), netCash.get(receiver), personList.get(giver)));
-//                }
-//            }
-//        }
-
         // Loop over all receivers and givers
         Integer receiverIndex = 0;
         Integer toReceive = netCash.get(receiverIndex);  // Initialize with first receiver
-
         for (Integer giverIndex : givers) {
             Integer toGive = netCash.get(giverIndex);
 
@@ -159,10 +155,8 @@ public class DatabaseFacade {
         return resultTransactions;
     }
 
-    public ArrayList<Transaction> getFinalTally() {
-
-
-        return null;
+    public ArrayList<Transaction> getFinalTally() throws Exception {
+        return this.calcTallyNaive(this.getAllTransactions());
     }
     public void addGroup(String name) {
         this.groupDatabase.addGroup(new Group(name));
@@ -189,4 +183,7 @@ public class DatabaseFacade {
         return ticketDatabase.getTicketViaUUID(id);
     }
 
+    public void clear() {
+        this.ticketDatabase.clear();
+    }
 }
