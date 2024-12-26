@@ -1,7 +1,7 @@
-package main.app;
+package app;
 
-import main.app.database.DatabaseFacade;
-import main.app.view.ViewFrame;
+import app.database.DatabaseFacade;
+import app.view.ViewFrame;
 
 
 public class Main {

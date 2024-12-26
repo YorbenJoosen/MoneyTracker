@@ -1,11 +1,11 @@
-package main.app.group;
+package app.group;
 
-import main.app.database.DatabaseFacade;
-import main.app.person.Person;
-import main.app.ticket.Ticket;
+import app.person.Person;
+import app.ticket.Ticket;
 
 import java.util.ArrayList;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class Group {
     private String name;
@@ -31,22 +31,18 @@ public class Group {
     public ArrayList<UUID> getPersonsUUIDs() {
         return this.personsUUIDs;
     }
-    public ArrayList<Person> getPersons(DatabaseFacade databaseFacade) {
-        ArrayList<Person> persons = new ArrayList<>();
-        for (UUID id : this.personsUUIDs) {
-            persons.add(databaseFacade.getPersonViaUUID(id));
-        }
-        return persons;
+
+    public ArrayList<Person> getPersons(ArrayList<Person> persons) {
+        return persons.stream().filter(person -> personsUUIDs.contains(person.getId())).collect(Collectors.toCollection(ArrayList::new));
     }
+
     public void addTicket(UUID id) {
         this.ticketsUUIDs.add(id);
     }
-    public ArrayList<Ticket> getTickets(DatabaseFacade databaseFacade) {
-        ArrayList<Ticket> tickets = new ArrayList<>();
-        for (UUID id : this.ticketsUUIDs) {
-            tickets.add(databaseFacade.getTicketViaUUID(id));
-        }
-        return tickets;
+
+    public ArrayList<Ticket> getTickets(ArrayList<Ticket> tickets) {
+        return tickets.stream().filter(ticket -> ticketsUUIDs.contains(ticket.getId())).collect(Collectors.toCollection(ArrayList::new));
+
     }
     public boolean checkIfPersonExists(UUID id) {
         return this.personsUUIDs.contains(id);

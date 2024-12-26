@@ -1,7 +1,7 @@
-package main.app.view;
+package app.view;
 
-import main.app.database.DatabaseFacade;
-import main.app.panels.MainMenu;
+import app.database.DatabaseFacade;
+import app.panels.MainMenu;
 
 import javax.swing.*;
 import java.awt.*;

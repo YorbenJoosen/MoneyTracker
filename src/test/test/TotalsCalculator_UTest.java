@@ -1,16 +1,14 @@
 package test;
 
-import main.app.database.DatabaseFacade;
-import main.app.person.Person;
-import main.app.ticket.Ticket;
-import main.app.ticket.TicketType;
-import main.app.ticket.Transaction;
+import app.database.DatabaseFacade;
+import app.person.Person;
+import app.ticket.Ticket;
+import app.ticket.TicketType;
+import app.ticket.Transaction;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -31,8 +29,8 @@ public class TotalsCalculator_UTest {
 
     String PERSON_ONE = "Person One";
     String PERSON_TWO = "Person One";
-    main.app.person.Person personOne = new main.app.person.Person(PERSON_ONE);
-    main.app.person.Person personTwo = new main.app.person.Person(PERSON_TWO);
+    app.person.Person personOne = new app.person.Person(PERSON_ONE);
+    app.person.Person personTwo = new app.person.Person(PERSON_TWO);
 
     @Test
     public void t_one_transaction_case() throws Exception {
@@ -40,7 +38,7 @@ public class TotalsCalculator_UTest {
 
         // Setup
         List<Person> personList = Collections.singletonList(personTwo);
-        main.app.ticket.Ticket ticket = Ticket.create_equal_list(personOne,
+        app.ticket.Ticket ticket = Ticket.create_equal_list(personOne,
                 "Ticket",
                 1000,
                 personList,

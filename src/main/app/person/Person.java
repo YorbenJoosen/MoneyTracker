@@ -1,4 +1,4 @@
-package main.app.person;
+package app.person;
 
 import java.util.UUID;
 
