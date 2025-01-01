@@ -115,21 +115,20 @@ public class DatabaseFacade {
         // Seperate people in "givers" and "receivers"
         ArrayList<Integer> givers = new ArrayList<>(); // List of indices of Person instances (referencing personList)
         ArrayList<Integer> receivers = new ArrayList<>(); // List of indices of Person instances (referencing personList)
-        int personIndex = 0;
-        for (Person person : personList) {
+
+        for (int personIndex = 0; personIndex < personList.size(); personIndex++) {
             if (netCash.get(personIndex) < 0) {
                 givers.add(personIndex);
             } else if (netCash.get(personIndex) > 0) {
                 receivers.add(personIndex);
             }
-            personIndex++;
         }
 
         // The result of this function is a series of transaction (total length shorter than input)
         ArrayList<Transaction> resultTransactions = new ArrayList<>();
 
         // Loop over all receivers and givers
-        Integer receiverIndex = 0;
+        int receiverIndex = 0;
         Integer toReceive = netCash.get(receiverIndex);  // Initialize with first receiver
         for (Integer giverIndex : givers) {
             Integer toGive = netCash.get(giverIndex);
@@ -138,17 +137,18 @@ public class DatabaseFacade {
             // Option A
             // Continue fetching more receivers until we satisfy condition
             while (toReceive <= toGive) {
-                resultTransactions.add(new Transaction(personList.get(receiverIndex), toReceive, personList.get(giverIndex)));
+                resultTransactions.add(new Transaction(personList.get(receivers.get(receiverIndex)), toReceive, personList.get(giverIndex)));
 
                 toGive -= toReceive;
 
                 receiverIndex++;
-                toReceive = netCash.get(receiverIndex);
+                toReceive = netCash.get(receivers.get(receiverIndex));
             }
 
             // Option B
-            toReceive -= toGive;
-            resultTransactions.add(new Transaction(personList.get(receiverIndex), toGive, personList.get(giverIndex)));
+            // We have enough in the current pool
+            toReceive += toGive;  // Receive are positive numbers, give are negative numbers. ie. 1000 + (-1000) = 0
+            resultTransactions.add(new Transaction(personList.get(receivers.get(receiverIndex)), abs(toGive), personList.get(giverIndex)));
         }
 
         // Return result!
