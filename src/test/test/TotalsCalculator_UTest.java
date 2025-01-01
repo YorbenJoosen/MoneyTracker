@@ -1,10 +1,10 @@
 package test;
 
-import main.app.database.DatabaseFacade;
-import main.app.person.Person;
-import main.app.ticket.Ticket;
-import main.app.ticket.TicketType;
-import main.app.ticket.Transaction;
+import app.database.DatabaseFacade;
+import app.person.Person;
+import app.ticket.Ticket;
+import app.ticket.TicketType;
+import app.ticket.Transaction;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,8 +29,8 @@ public class TotalsCalculator_UTest {
     String PERSON_ONE = "Person One";
     String PERSON_TWO = "Person Two";
     String PERSON_THREE = "Person Three";
-    Person personOne = new main.app.person.Person(PERSON_ONE);
-    Person personTwo = new main.app.person.Person(PERSON_TWO);
+    Person personOne = new app.person.Person(PERSON_ONE);
+    Person personTwo = new app.person.Person(PERSON_TWO);
     Person personThree = new Person(PERSON_THREE);
 
     @Test
@@ -40,7 +40,7 @@ public class TotalsCalculator_UTest {
 
         // Setup
         List<Person> personList = Collections.singletonList(personTwo);
-        main.app.ticket.Ticket ticket = Ticket.create_equal_list(personOne,
+        app.ticket.Ticket ticket = Ticket.create_equal_list(personOne,
                 "Ticket",
                 amount,
                 personList,
@@ -66,7 +66,7 @@ public class TotalsCalculator_UTest {
 
         // Setup
         List<Person> personList = Arrays.asList(personTwo, personThree);
-        main.app.ticket.Ticket ticket = Ticket.create_equal_list(personOne,
+        app.ticket.Ticket ticket = Ticket.create_equal_list(personOne,
                 "Ticket",
                 amount,
                 personList,
@@ -103,13 +103,13 @@ public class TotalsCalculator_UTest {
 
         // Setup
         List<Person> personList = Arrays.asList(personTwo, personThree);
-        main.app.ticket.Ticket ticketOne = Ticket.create_equal_list(personOne,
+        app.ticket.Ticket ticketOne = Ticket.create_equal_list(personOne,
                 "Ticket",
                 amount,
                 personList,
                 TicketType.restaurant
         );
-        main.app.ticket.Ticket ticketTwo = Ticket.create_equal_list(personOne,
+        app.ticket.Ticket ticketTwo = Ticket.create_equal_list(personOne,
                 "Ticket",
                 amount,
                 personList,
