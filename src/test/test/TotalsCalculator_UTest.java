@@ -95,4 +95,48 @@ public class TotalsCalculator_UTest {
 
         assert !firstTransaction.rhsPerson().equals(secondTransaction.rhsPerson());
     }
+
+    @Test
+    public void t_reducing_tickets_transaction_case() throws Exception {
+        DatabaseFacade database = DatabaseFacade.getInstance();
+        int amount = 1000;
+
+        // Setup
+        List<Person> personList = Arrays.asList(personTwo, personThree);
+        main.app.ticket.Ticket ticketOne = Ticket.create_equal_list(personOne,
+                "Ticket",
+                amount,
+                personList,
+                TicketType.restaurant
+        );
+        main.app.ticket.Ticket ticketTwo = Ticket.create_equal_list(personOne,
+                "Ticket",
+                amount,
+                personList,
+                TicketType.airplane
+        );
+        database.addTicket(ticketOne);
+        database.addTicket(ticketTwo);
+
+        // Execute
+        ArrayList<Transaction> finalResult = database.getFinalTally();
+
+        // Assert
+        assert !finalResult.isEmpty();
+        assert finalResult.size() == 2;
+
+        Transaction firstTransaction = finalResult.get(0);
+        Transaction secondTransaction = finalResult.get(1);
+
+        assert Objects.equals(firstTransaction.amount(), amount);
+        assert Objects.equals(secondTransaction.amount(), amount);
+
+        assert firstTransaction.lhsPerson().equals(personOne);
+        assert secondTransaction.lhsPerson().equals(personOne);
+
+        assert !firstTransaction.rhsPerson().equals(personOne);
+        assert !secondTransaction.rhsPerson().equals(personOne);
+
+        assert !firstTransaction.rhsPerson().equals(secondTransaction.rhsPerson());
+    }
 }

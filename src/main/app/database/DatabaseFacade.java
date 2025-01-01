@@ -105,9 +105,9 @@ public class DatabaseFacade {
 
         // Collect all people in the input transactions and calculate the net cash flow (incoming - outgoing)
         ArrayList<Person> personList = new ArrayList<>();
-        for (Transaction transaction : transactions) {
-            personList.add(transaction.lhsPerson());
-            personList.add(transaction.rhsPerson());
+        for (Transaction transaction : transactions) { // TODO Te veel persons toegevoegd
+            if (!personList.contains(transaction.lhsPerson())) {personList.add(transaction.lhsPerson());}
+            if (!personList.contains(transaction.rhsPerson())) {personList.add(transaction.rhsPerson());}
         }
 
         List<Integer> netCash = personList.stream().map(this::netAmountForPerson).toList();
