@@ -1,4 +1,4 @@
-package main.app.person;
+package app.person;
 
 public class InputPerson {
     private final String name;

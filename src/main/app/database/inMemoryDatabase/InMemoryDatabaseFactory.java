@@ -1,6 +1,6 @@
-package main.app.database.inMemoryDatabase;
+package app.database.inMemoryDatabase;
 
-import main.app.database.abstractDatabase.AbstractDatabaseFactory;
+import app.database.abstractDatabase.AbstractDatabaseFactory;
 
 public class InMemoryDatabaseFactory extends AbstractDatabaseFactory {
 

@@ -1,7 +1,7 @@
-package main.app.panels;
+package app.panels;
 
-import main.app.database.DatabaseFacade;
-import main.app.group.Group;
+import app.database.DatabaseFacade;
+import app.group.Group;
 
 import javax.swing.*;
 import java.awt.*;

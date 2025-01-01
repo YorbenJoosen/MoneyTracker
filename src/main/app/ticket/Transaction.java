@@ -1,6 +1,6 @@
-package main.app.ticket;
+package app.ticket;
 
-import main.app.person.Person;
+import app.person.Person;
 
 /**
  * @param lhsPerson Who will receive the money

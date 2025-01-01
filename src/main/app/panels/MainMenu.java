@@ -1,7 +1,7 @@
-package main.app.panels;
+package app.panels;
 
-import main.app.database.DatabaseFacade;
-import main.app.person.Person;
+import app.database.DatabaseFacade;
+import app.person.Person;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,7 +33,7 @@ public class MainMenu extends JPanel {
     }
 
     private void showPersons() {
-        ArrayList<Person> persons = databaseFacade.getAllPersons();
+        ArrayList<Person> persons = databaseFacade.getPersons();
 
         // Show message and return if no persons exist
         if (persons.isEmpty()) {

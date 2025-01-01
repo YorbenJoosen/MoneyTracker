@@ -1,9 +1,9 @@
-package main.app.panels;
+package app.panels;
 
-import main.app.database.DatabaseFacade;
-import main.app.group.Group;
-import main.app.person.Person;
-import main.app.ticket.Ticket;
+import app.database.DatabaseFacade;
+import app.group.Group;
+import app.person.Person;
+import app.ticket.Ticket;
 
 import javax.swing.*;
 import java.awt.*;
@@ -72,7 +72,7 @@ public class GroupDetails extends JPanel {
     }
 
     private void showPersons() {
-        ArrayList<Person> persons = this.group.getPersons(this.databaseFacade);
+        ArrayList<Person> persons = this.databaseFacade.getPersonsOfGroup(this.group.getId());
 
         // Show message and return if no persons exist
         if (persons.isEmpty()) {
@@ -95,7 +95,7 @@ public class GroupDetails extends JPanel {
     }
 
     private void showTickets() {
-        ArrayList<Ticket> tickets = this.group.getTickets(databaseFacade);
+        ArrayList<Ticket> tickets = this.databaseFacade.getTicketsOfGroup(this.group.getId());
 
         // Show message and return if no tickets exist
         if (tickets.isEmpty()) {

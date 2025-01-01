@@ -1,19 +1,17 @@
-package main.app.database;
+package app.database;
 
-import main.app.database.abstractDatabase.AbstractDatabaseFactory;
-import main.app.database.abstractDatabase.AbstractGroupDatabase;
-import main.app.database.abstractDatabase.AbstractPersonDatabase;
-import main.app.database.abstractDatabase.AbstractTicketDatabase;
-import main.app.database.inMemoryDatabase.InMemoryDatabaseFactory;
-import main.app.group.Group;
-import main.app.observers.DatabaseUpdateListener;
-import main.app.person.Person;
-import main.app.ticket.Ticket;
-import main.app.ticket.Transaction;
+import app.database.abstractDatabase.AbstractDatabaseFactory;
+import app.database.abstractDatabase.AbstractGroupDatabase;
+import app.database.abstractDatabase.AbstractPersonDatabase;
+import app.database.abstractDatabase.AbstractTicketDatabase;
+import app.database.inMemoryDatabase.InMemoryDatabaseFactory;
+import app.group.Group;
+import app.observers.DatabaseUpdateListener;
+import app.person.Person;
+import app.ticket.Ticket;
+import app.ticket.Transaction;
 
 import java.util.*;
-
-import static java.lang.Math.abs;
 
 public class DatabaseFacade {
     private static volatile DatabaseFacade instance;
@@ -25,11 +23,11 @@ public class DatabaseFacade {
     private DatabaseFacade(AbstractDatabaseFactory databaseFactory) {
         // Private constructor
         this.personDatabase = databaseFactory.createPersonDatabase();
-        new DatabaseUpdateListener(this.personDatabase);
+        new DatabaseUpdateListener<>(this.personDatabase);
         this.ticketDatabase = databaseFactory.createTicketDatabase();
-        new DatabaseUpdateListener(this.ticketDatabase);
+        new DatabaseUpdateListener<>(this.ticketDatabase);
         this.groupDatabase = databaseFactory.createGroupDatabase();
-        new DatabaseUpdateListener(this.groupDatabase);
+        new DatabaseUpdateListener<>(this.groupDatabase);
 
     }
 
@@ -51,7 +49,7 @@ public class DatabaseFacade {
     }
 
     public ArrayList<Ticket> fetchAllTickets() {
-        return this.ticketDatabase.getTickets();
+        return this.ticketDatabase.getAll();
     }
 
     public ArrayList<Transaction> getAllTransactions() {
@@ -66,7 +64,7 @@ public class DatabaseFacade {
         return this.getAllTransactions().
                 stream().
                 filter(transaction -> transaction.lhsPerson().equals(person)).
-                map(transaction -> transaction.amount()).
+                map(Transaction::amount).
                 reduce(0, Integer::sum);
     }
 
@@ -74,7 +72,7 @@ public class DatabaseFacade {
         return this.getAllTransactions().
                 stream().
                 filter(transaction -> transaction.rhsPerson().equals(person)).
-                map(transaction -> transaction.amount()).
+                map(Transaction::amount).
                 reduce(0, Integer::sum);
     }
 
@@ -91,11 +89,11 @@ public class DatabaseFacade {
     }
 
     public Optional<Person> personWithLargestOutgoing(ArrayList<Transaction> transactions) {
-        return transactions.stream().max(Comparator.comparing(transaction -> transaction.amount())).map(transaction -> transaction.rhsPerson());
+        return transactions.stream().max(Comparator.comparing(Transaction::amount)).map(Transaction::rhsPerson);
     }
 
     public Optional<Person> personWithLargestIncoming(ArrayList<Transaction> transactions) {
-        return transactions.stream().max(Comparator.comparing(transaction -> transaction.amount())).map(transaction -> transaction.lhsPerson());
+        return transactions.stream().max(Comparator.comparing(Transaction::amount)).map(Transaction::lhsPerson);
     }
 
     public ArrayList<Transaction> calcTallyNaive(ArrayList<Transaction> transactions) throws Exception {
@@ -159,28 +157,34 @@ public class DatabaseFacade {
         return this.calcTallyNaive(this.getAllTransactions());
     }
     public void addGroup(String name) {
-        this.groupDatabase.addGroup(new Group(name));
+        this.groupDatabase.addEntry(new Group(name));
     }
     public ArrayList<Group> getGroups() {
-        return this.groupDatabase.getGroups();
+        return this.groupDatabase.getAll();
     }
-    public ArrayList<Person> getAllPersons() {
-        return this.personDatabase.getPersons();
+    public ArrayList<Person> getPersonsOfGroup(UUID groupId) {
+        return this.groupDatabase.getViaUUID(groupId).getPersons(this.personDatabase.getAll());
+    }
+    public ArrayList<Ticket> getTicketsOfGroup(UUID groupId) {
+        return this.groupDatabase.getViaUUID(groupId).getTickets(this.ticketDatabase.getAll());
+    }
+    public ArrayList<Person> getPersons() {
+        return this.personDatabase.getAll();
     }
     public void addPerson(Person person) {
-        this.personDatabase.addPerson(person);
+        this.personDatabase.addEntry(person);
     }
     public void addTicket(Ticket ticket) {
-        this.ticketDatabase.addTicket(ticket);
+        this.ticketDatabase.addEntry(ticket);
     }
     public Person getPersonViaUUID(UUID id) {
-        return personDatabase.getPersonViaUUID(id);
+        return personDatabase.getViaUUID(id);
     }
     public Person getPersonViaName(String name) {
-        return personDatabase.getPersonViaName(name);
+        return personDatabase.getViaName(name);
     }
     public Ticket getTicketViaUUID(UUID id) {
-        return ticketDatabase.getTicketViaUUID(id);
+        return ticketDatabase.getViaUUID(id);
     }
 
     public void clear() {

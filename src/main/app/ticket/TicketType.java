@@ -1,4 +1,4 @@
-package main.app.ticket;
+package app.ticket;
 
 public enum TicketType {
     airplane,
@@ -7,13 +7,11 @@ public enum TicketType {
 
     @Override
     public String toString() {
-        switch (this) {
-            case airplane:
-                return "airplane";
-            case restaurant:
-                return "restaurant";
-            default: return "";
-        }
+        return switch (this) {
+            case airplane -> "airplane";
+            case restaurant -> "restaurant";
+            default -> "";
+        };
     }
 }
 

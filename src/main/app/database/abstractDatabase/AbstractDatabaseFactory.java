@@ -1,4 +1,4 @@
-package main.app.database.abstractDatabase;
+package app.database.abstractDatabase;
 
 public abstract class AbstractDatabaseFactory {
 

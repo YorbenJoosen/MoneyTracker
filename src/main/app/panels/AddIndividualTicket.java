@@ -1,10 +1,10 @@
-package main.app.panels;
+package app.panels;
 
-import main.app.database.DatabaseFacade;
-import main.app.group.Group;
-import main.app.person.Person;
-import main.app.ticket.Ticket;
-import main.app.ticket.TicketType;
+import app.database.DatabaseFacade;
+import app.group.Group;
+import app.person.Person;
+import app.ticket.Ticket;
+import app.ticket.TicketType;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,7 +28,7 @@ public class AddIndividualTicket extends JPanel {
         this.databaseFacade = databaseFacade;
         this.group = group;
 
-        ArrayList<Person> persons = group.getPersons(databaseFacade);
+        ArrayList<Person> persons = databaseFacade.getPersonsOfGroup(group.getId());
 
         // Set layout
         setLayout(new GridBagLayout());
