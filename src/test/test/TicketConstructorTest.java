@@ -14,11 +14,7 @@ import java.util.List;
 //@RunWith(PowerMockRunner.class)
 // Prepare class RegistrationController for testing by injecting mocks
 //@PrepareForTest(main.app.ticket.Ticket.class)
-public class TicketConstructor_UTest {
-    public TicketConstructor_UTest() {
-
-    }
-
+public class TicketConstructorTest {
     String OWNER_NAME = "TicketConstructor_Owner";
     Person owner = new Person(OWNER_NAME);
 

@@ -12,7 +12,7 @@ import org.junit.Test;
 
 import java.util.*;
 
-public class TotalsCalculator_UTest {
+public class TotalsCalculatorTest {
 
     TallyStrategy tallyStrategy = new FirstFitStrategy();
 
