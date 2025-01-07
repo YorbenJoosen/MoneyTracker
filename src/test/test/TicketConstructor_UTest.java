@@ -1,8 +1,8 @@
 package test;
 
-import main.app.person.Person;
-import main.app.ticket.Ticket;
-import main.app.ticket.TicketType;
+import app.person.Person;
+import app.ticket.Ticket;
+import app.ticket.TicketType;
 import org.junit.Test;
 
 import java.util.Arrays;
