@@ -1,4 +1,4 @@
-package main.app.config;
+package app.config;
 
 public class Config {
     private static Config instance;

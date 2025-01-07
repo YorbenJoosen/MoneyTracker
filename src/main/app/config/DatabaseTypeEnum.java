@@ -1,4 +1,4 @@
-package main.app.config;
+package app.config;
 
 public enum DatabaseTypeEnum {
     inmemory,
