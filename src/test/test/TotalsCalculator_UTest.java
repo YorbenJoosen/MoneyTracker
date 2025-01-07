@@ -2,16 +2,19 @@ package test;
 
 import app.database.DatabaseFacade;
 import app.person.Person;
+import app.tally.FirstFitStrategy;
+import app.tally.TallyStrategy;
 import app.ticket.Ticket;
 import app.ticket.TicketType;
 import app.ticket.Transaction;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
 
 import java.util.*;
 
 public class TotalsCalculator_UTest {
+
+    TallyStrategy tallyStrategy = new FirstFitStrategy();
 
     @Before
     public void clear_database() {
@@ -22,7 +25,7 @@ public class TotalsCalculator_UTest {
     @Test
     public void t_empty_case() throws Exception {
         DatabaseFacade database = DatabaseFacade.getInstance();
-        ArrayList<Transaction> finalResult = database.getFinalTally();
+        ArrayList<Transaction> finalResult = tallyStrategy.reduceTransactions(database.getAllTransactions());
         assert finalResult.isEmpty();
     }
 
@@ -49,7 +52,7 @@ public class TotalsCalculator_UTest {
         database.addTicket(ticket);
 
         // Execute
-        ArrayList<Transaction> finalResult = database.getFinalTally();
+        ArrayList<Transaction> finalResult = tallyStrategy.reduceTransactions(database.getAllTransactions());
 
         // Assert
         assert !finalResult.isEmpty();
@@ -75,7 +78,7 @@ public class TotalsCalculator_UTest {
         database.addTicket(ticket);
 
         // Execute
-        ArrayList<Transaction> finalResult = database.getFinalTally();
+        ArrayList<Transaction> finalResult = tallyStrategy.reduceTransactions(database.getAllTransactions());
 
         // Assert
         assert !finalResult.isEmpty();
@@ -119,7 +122,7 @@ public class TotalsCalculator_UTest {
         database.addTicket(ticketTwo);
 
         // Execute
-        ArrayList<Transaction> finalResult = database.getFinalTally();
+        ArrayList<Transaction> finalResult = tallyStrategy.reduceTransactions(database.getAllTransactions());
 
         // Assert
         assert !finalResult.isEmpty();

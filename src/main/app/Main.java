@@ -1,6 +1,7 @@
 package app;
 
 import app.database.DatabaseFacade;
+import app.tally.FirstFitStrategy;
 import app.view.ViewFrame;
 
 
@@ -15,6 +16,6 @@ public class Main {
 
     public void run() {
         DatabaseFacade databaseFacade = DatabaseFacade.getInstance();
-        new ViewFrame(databaseFacade);
+        new ViewFrame(databaseFacade, new FirstFitStrategy());
     }
 }

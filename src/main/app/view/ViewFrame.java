@@ -2,13 +2,14 @@ package app.view;
 
 import app.database.DatabaseFacade;
 import app.panels.MainMenu;
+import app.tally.TallyStrategy;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class ViewFrame {
 
-    public ViewFrame(DatabaseFacade databaseFacade) {
+    public ViewFrame(DatabaseFacade databaseFacade, TallyStrategy tallyStrategy) {
         JFrame frame = new JFrame("Homepage");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(1920, 1080);
