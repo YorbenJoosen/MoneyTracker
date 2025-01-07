@@ -4,6 +4,7 @@ import app.database.DatabaseFacade;
 import app.group.Group;
 import app.person.Person;
 import app.ticket.Ticket;
+import app.ticket.Transaction;
 
 import javax.swing.*;
 import java.awt.*;
@@ -65,7 +66,11 @@ public class GroupDetails extends JPanel {
                     addPerson();
                     break;
                 case "Show Debts":
-                    showDebts();
+                    try {
+                        showDebts();
+                    } catch (Exception ex) {
+                        throw new RuntimeException(ex);
+                    }
                     break;
             }
         };
@@ -176,7 +181,27 @@ public class GroupDetails extends JPanel {
         }
     }
 
-    private void showDebts() {
+    private void showDebts() throws Exception {
         // Implement the logic to show debts of the group
+        ArrayList<Transaction> tally = this.databaseFacade.getConfig().getTallyStrategy().reduceTransactions(this.databaseFacade.getAllTransactions(group.getId()));
+
+        // Show message and return if no tickets exist
+        if (tally.isEmpty()) {
+            JOptionPane.showMessageDialog(frame, "No debts available yet.", "No Detbs", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        // Create frame only if there are tickets
+        JFrame ticketsFrame = new JFrame("Debts");
+        ticketsFrame.setSize(1920, 1080);
+
+        // Create selection field of tickets
+        DefaultListModel<Transaction> transactionListModel = new DefaultListModel<>();
+        JList<Transaction> transactionList = new JList<>(transactionListModel);
+        tally.forEach(transactionListModel::addElement);
+
+        // Add selection field to the frame
+        ticketsFrame.add(new JScrollPane(transactionList));
+        ticketsFrame.setVisible(true);
     }
 }

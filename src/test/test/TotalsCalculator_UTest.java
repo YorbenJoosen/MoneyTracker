@@ -17,7 +17,7 @@ public class TotalsCalculator_UTest {
     TallyStrategy tallyStrategy = new FirstFitStrategy();
 
     @Before
-    public void clear_database() {
+    public void clear_database() throws Exception {
         DatabaseFacade database = DatabaseFacade.getInstance();
         database.clear();
     }

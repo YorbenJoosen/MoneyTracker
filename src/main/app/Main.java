@@ -1,21 +1,19 @@
 package app;
 
 import app.database.DatabaseFacade;
-import app.tally.FirstFitStrategy;
 import app.view.ViewFrame;
 
 
 public class Main {
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) throws Exception {
         Main main = new Main();
         main.run();
     }
 
     public Main() {}
 
-    public void run() {
+    public void run() throws Exception {
         DatabaseFacade databaseFacade = DatabaseFacade.getInstance();
-        new ViewFrame(databaseFacade, new FirstFitStrategy());
+        new ViewFrame(databaseFacade);
     }
 }

@@ -1,5 +1,7 @@
 package app.database;
 
+import app.config.Config;
+import app.config.DatabaseTypeEnum;
 import app.database.abstractDatabase.AbstractDatabaseFactory;
 import app.database.abstractDatabase.AbstractGroupDatabase;
 import app.database.abstractDatabase.AbstractPersonDatabase;
@@ -11,7 +13,8 @@ import app.person.Person;
 import app.ticket.Ticket;
 import app.ticket.Transaction;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.UUID;
 
 public class DatabaseFacade {
     private static volatile DatabaseFacade instance;
@@ -19,8 +22,9 @@ public class DatabaseFacade {
     private final AbstractPersonDatabase personDatabase;
     private final AbstractTicketDatabase ticketDatabase;
     private final AbstractGroupDatabase groupDatabase;
+    private final Config config;
 
-    private DatabaseFacade(AbstractDatabaseFactory databaseFactory) {
+    private DatabaseFacade(AbstractDatabaseFactory databaseFactory, Config config) {
         // Private constructor
         this.personDatabase = databaseFactory.createPersonDatabase();
         new DatabaseUpdateListener<>(this.personDatabase);
@@ -28,16 +32,22 @@ public class DatabaseFacade {
         new DatabaseUpdateListener<>(this.ticketDatabase);
         this.groupDatabase = databaseFactory.createGroupDatabase();
         new DatabaseUpdateListener<>(this.groupDatabase);
-
+        this.config = config;
     }
 
-    public static DatabaseFacade getInstance() {
-        InMemoryDatabaseFactory factory = new InMemoryDatabaseFactory(); // TODO Deduce Factory from Config Singleton
+    public static DatabaseFacade getInstance() throws Exception {
+        Config config = Config.getInstance();
+        InMemoryDatabaseFactory factory;
+        if (config.getDatabaseType() == DatabaseTypeEnum.inmemory) {
+            factory = new InMemoryDatabaseFactory();
+        } else {
+            throw new Exception();
+        }
 
         if (instance == null) {
             synchronized (DatabaseFacade.class) {
                 if (instance == null) {
-                    instance = new DatabaseFacade(factory);
+                    instance = new DatabaseFacade(factory, config);
                 }
             }
         }
@@ -52,6 +62,13 @@ public class DatabaseFacade {
         return this.ticketDatabase.getAll();
     }
 
+    public ArrayList<Transaction> getAllTransactions(UUID groupId) {
+        ArrayList<Transaction> result = new ArrayList<>();
+        for (Ticket ticket : getTicketsOfGroup(groupId)) {
+            result.addAll(ticket.getPersonPriceList());
+        }
+        return result;
+    }
     public ArrayList<Transaction> getAllTransactions() {
         ArrayList<Transaction> result = new ArrayList<>();
         for (Ticket ticket : fetchAllTickets()) {
@@ -93,5 +110,9 @@ public class DatabaseFacade {
 
     public void clear() {
         this.ticketDatabase.clear();
+    }
+
+    public Config getConfig() {
+        return config;
     }
 }
