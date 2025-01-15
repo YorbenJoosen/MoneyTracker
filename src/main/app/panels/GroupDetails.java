@@ -187,7 +187,7 @@ public class GroupDetails extends JPanel {
 
         // Show message and return if no tickets exist
         if (tally.isEmpty()) {
-            JOptionPane.showMessageDialog(frame, "No debts available yet.", "No Detbs", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(frame, "No debts available yet.", "No Debts", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
 
