@@ -50,9 +50,6 @@ public class Group {
         return tickets.stream().filter(ticket -> ticketsUUIDs.contains(ticket.getId())).collect(Collectors.toCollection(ArrayList::new));
 
     }
-    public boolean checkIfPersonExists(UUID id) {
-        return this.personsUUIDs.contains(id);
-    }
 
     public void setName(String name) {
         this.name = name;

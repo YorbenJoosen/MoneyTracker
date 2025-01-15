@@ -20,7 +20,7 @@ public class GroupDetails extends JPanel {
         this.databaseFacade = databaseFacade;
         this.frame = frame;
         this.group = group;
-        setLayout(new GridLayout(4, 2));
+        setLayout(new GridLayout(3, 2));
 
         // Create buttons
         JButton showPersonsButton = new JButton("Show Persons");
@@ -203,7 +203,7 @@ public class GroupDetails extends JPanel {
                 // Get the person from the database
                 Person person = databaseFacade.getPersonViaName(personName);
                 // Check if person is already in the group
-                if (group.checkIfPersonExists(person.getId())) {
+                if (group.containsPerson(person.getId())) {
                     // Warning message that person is already in the group
                     JOptionPane.showMessageDialog(frame, "Person is already in the group.", "Person is a member", JOptionPane.INFORMATION_MESSAGE);
                 }
@@ -213,13 +213,14 @@ public class GroupDetails extends JPanel {
                     // Success message
                     JOptionPane.showMessageDialog(frame, "Person successful added.", "Success", JOptionPane.INFORMATION_MESSAGE);
                 }
+            } else {
+                // If person doesn't exist in database, create it and add it to the group
+                Person person = new Person(personName);
+                databaseFacade.addPerson(person);
+                group.addPerson(person.getId());
+                // Success message
+                JOptionPane.showMessageDialog(frame, "Person successful added.", "Success", JOptionPane.INFORMATION_MESSAGE);
             }
-            // If person doesn't exist in database, create it and add it to the group
-            Person person = new Person(personName);
-            databaseFacade.addPerson(person);
-            group.addPerson(person.getId());
-            // Success message
-            JOptionPane.showMessageDialog(frame, "Person successful added.", "Success", JOptionPane.INFORMATION_MESSAGE);
         } else {
             // Invalid input message
             JOptionPane.showMessageDialog(frame, "No person name entered. Person not added.", "Error", JOptionPane.ERROR_MESSAGE);
