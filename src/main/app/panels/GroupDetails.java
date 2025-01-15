@@ -162,6 +162,54 @@ public class GroupDetails extends JPanel {
         JList<Ticket> ticketList = new JList<>(ticketListModel);
         tickets.forEach(ticketListModel::addElement);
 
+        // Add context menu for deleting tickets
+        JPopupMenu contextMenu = new JPopupMenu();
+        JMenuItem deleteTicket = new JMenuItem("Delete Ticket");
+        contextMenu.add(deleteTicket);
+
+        // Add action listener for the delete option
+        deleteTicket.addActionListener(e -> {
+            Ticket selectedTicket = ticketList.getSelectedValue();
+            if (selectedTicket != null) {
+                // Confirm deletion
+                int confirm = JOptionPane.showConfirmDialog(ticketsFrame,
+                        "Are you sure you want to delete the ticket?",
+                        "Delete Ticket", JOptionPane.YES_NO_OPTION);
+
+                if (confirm == JOptionPane.YES_OPTION) {
+                    // Remove ticket from group
+                    group.removeTicket(selectedTicket.getId());
+                    // Remove ticket from database
+                    databaseFacade.removeTicket(selectedTicket.getId());
+                    // Remove ticket from list
+                    ticketListModel.removeElement(selectedTicket);
+                    JOptionPane.showMessageDialog(ticketsFrame, "Ticket removed successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
+        });
+
+        // Show context menu on right-click
+        ticketList.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                if (evt.isPopupTrigger()) {
+                    showContextMenu(evt);
+                }
+            }
+
+            @Override
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                if (evt.isPopupTrigger()) {
+                    showContextMenu(evt);
+                }
+            }
+
+            private void showContextMenu(java.awt.event.MouseEvent evt) {
+                ticketList.setSelectedIndex(ticketList.locationToIndex(evt.getPoint()));
+                contextMenu.show(evt.getComponent(), evt.getX(), evt.getY());
+            }
+        });
+
         // Add selection field to the frame
         ticketsFrame.add(new JScrollPane(ticketList));
         ticketsFrame.setVisible(true);
@@ -227,7 +275,7 @@ public class GroupDetails extends JPanel {
         }
     }
 
-    private void showDebts() throws Exception {
+    private void showDebts(){
         // Implement the logic to show debts of the group
         ArrayList<Transaction> tally = this.databaseFacade.getConfig().getTallyStrategy().reduceTransactions(this.databaseFacade.getAllTransactions(group.getId()));
 

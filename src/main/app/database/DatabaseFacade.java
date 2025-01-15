@@ -119,6 +119,9 @@ public class DatabaseFacade {
             this.ticketDatabase.removeEntry(ticketId);
         }
     }
+    public void removeTicket(UUID ticketId) {
+        this.ticketDatabase.removeEntry(ticketId);
+    }
     public void removePerson(UUID personId) {
         this.personDatabase.removeEntry(personId);
     }

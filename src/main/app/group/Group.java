@@ -50,6 +50,9 @@ public class Group {
         return tickets.stream().filter(ticket -> ticketsUUIDs.contains(ticket.getId())).collect(Collectors.toCollection(ArrayList::new));
 
     }
+    public void removeTicket(UUID id) {
+        this.ticketsUUIDs.remove(id);
+    }
 
     public void setName(String name) {
         this.name = name;
