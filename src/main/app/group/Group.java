@@ -35,6 +35,12 @@ public class Group {
     public ArrayList<Person> getPersons(ArrayList<Person> persons) {
         return persons.stream().filter(person -> personsUUIDs.contains(person.getId())).collect(Collectors.toCollection(ArrayList::new));
     }
+    public void removePerson(UUID id) {
+        this.personsUUIDs.remove(id);
+    }
+    public boolean containsPerson(UUID id) {
+        return this.personsUUIDs.contains(id);
+    }
 
     public void addTicket(UUID id) {
         this.ticketsUUIDs.add(id);

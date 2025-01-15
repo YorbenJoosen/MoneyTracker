@@ -5,6 +5,7 @@ import app.group.Group;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 
 public class ShowGroups extends JPanel {
     private final DatabaseFacade databaseFacade;
@@ -41,6 +42,50 @@ public class ShowGroups extends JPanel {
                 }
             }
         });
+        // Deleting groups
+        JPopupMenu popupMenu = new JPopupMenu();
+        JMenuItem deleteGroup = new JMenuItem("Delete");
+        popupMenu.add(deleteGroup);
+
+        // Add right-click listener to delete group
+        deleteGroup.addActionListener((ActionEvent e) -> {
+            Group selectedGroup = groupSelector.getSelectedValue();
+            if (selectedGroup != null) {
+                // Confirm deletion
+                int confirm = JOptionPane.showConfirmDialog(groupsFrame,
+                        "Are you sure you want to delete the group: " + selectedGroup.getName() + "?",
+                        "Delete Group", JOptionPane.YES_NO_OPTION);
+
+                if (confirm == JOptionPane.YES_OPTION) {
+                    // Remove group from database
+                    databaseFacade.removeGroup(selectedGroup.getId());
+                    // Remove group from list
+                    groupListModel.removeElement(selectedGroup);
+                }
+            }
+        });
+        // Show context menu on right-click
+        groupSelector.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                if (evt.isPopupTrigger()) {
+                    showContextMenu(evt);
+                }
+            }
+
+            @Override
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                if (evt.isPopupTrigger()) {
+                    showContextMenu(evt);
+                }
+            }
+
+            private void showContextMenu(java.awt.event.MouseEvent evt) {
+                groupSelector.setSelectedIndex(groupSelector.locationToIndex(evt.getPoint()));
+                popupMenu.show(evt.getComponent(), evt.getX(), evt.getY());
+            }
+        });
+
         // Add selection field to the frame
         groupsFrame.add(new JScrollPane(groupSelector), BorderLayout.CENTER);
         groupsFrame.setVisible(true);

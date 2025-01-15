@@ -15,12 +15,12 @@ public class InMemoryPersonDatabase extends AbstractPersonDatabase {
     @Override
     public void addEntry(Person person) {
         personMap.put(person.getId(), person);
-        this.support.firePropertyChange("person", null, person);
+        this.support.firePropertyChange("Update", null, person);
     }
 
     @Override
-    public void removeEntry(Person entry) {
-        personMap.remove(entry.getId());
+    public void removeEntry(UUID personId) {
+        personMap.remove(personId);
     }
 
     @Override

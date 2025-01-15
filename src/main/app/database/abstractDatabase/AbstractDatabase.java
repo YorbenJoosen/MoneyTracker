@@ -16,6 +16,6 @@ abstract public class AbstractDatabase<T> {
     public abstract T getViaUUID(UUID id);
     public abstract ArrayList<T> getAll();
     public abstract void addEntry(T entry);
-    public abstract void removeEntry(T entry);
+    public abstract void removeEntry(UUID id);
     public abstract void clear();
 }

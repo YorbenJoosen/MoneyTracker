@@ -15,12 +15,12 @@ public class InMemoryTicketDatabase extends AbstractTicketDatabase {
     @Override
     public void addEntry(Ticket ticket) {
         ticketMap.put(ticket.getId(), ticket);
-        this.support.firePropertyChange("ticket", null, ticket);
+        this.support.firePropertyChange("Update", null, ticket);
     }
 
     @Override
-    public void removeEntry(Ticket entry) {
-        ticketMap.remove(entry.getId());
+    public void removeEntry(UUID ticketId) {
+        ticketMap.remove(ticketId);
     }
 
     @Override

@@ -15,12 +15,12 @@ public class InMemoryGroupDatabase extends AbstractGroupDatabase {
     @Override
     public void addEntry(Group group) {
         groupMap.put(group.getId(), group);
-        this.support.firePropertyChange("group", null, group);
+        support.firePropertyChange("Update", null, group);
     }
 
     @Override
-    public void removeEntry(Group entry) {
-        groupMap.remove(entry.getId());
+    public void removeEntry(UUID groupId) {
+        groupMap.remove(groupId);
     }
 
     @Override

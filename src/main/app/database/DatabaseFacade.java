@@ -107,6 +107,12 @@ public class DatabaseFacade {
     public Ticket getTicketViaUUID(UUID id) {
         return ticketDatabase.getViaUUID(id);
     }
+    public void removeGroup(UUID groupId) {
+        this.groupDatabase.removeEntry(groupId);
+    }
+    public void removePerson(UUID personId) {
+        this.personDatabase.removeEntry(personId);
+    }
 
     public void clear() {
         this.ticketDatabase.clear();

@@ -20,7 +20,7 @@ public class GroupDetails extends JPanel {
         this.databaseFacade = databaseFacade;
         this.frame = frame;
         this.group = group;
-        setLayout(new GridLayout(3, 2));
+        setLayout(new GridLayout(4, 2));
 
         // Create buttons
         JButton showPersonsButton = new JButton("Show Persons");
@@ -30,7 +30,7 @@ public class GroupDetails extends JPanel {
         JButton addPersonButton = new JButton("Add Person");
         JButton showDebtsButton = new JButton("Show Debts");
 
-        // Add listeners for the buttons
+        // Add action listeners for the buttons
         showPersonsButton.addActionListener(createButtonActionListener("Show Persons"));
         showTicketsButton.addActionListener(createButtonActionListener("Show Tickets"));
         addEqualTicketButton.addActionListener(createButtonActionListener("Add Equal List Ticket"));
@@ -93,6 +93,51 @@ public class GroupDetails extends JPanel {
         DefaultListModel<Person> personListModel = new DefaultListModel<>();
         JList<Person> personList = new JList<>(personListModel);
         persons.forEach(personListModel::addElement);
+
+        // Add context menu for deleting persons
+        JPopupMenu contextMenu = new JPopupMenu();
+        JMenuItem deletePerson = new JMenuItem("Delete");
+        contextMenu.add(deletePerson);
+
+        // Add action listener for the delete option
+        deletePerson.addActionListener(e -> {
+            Person selectedPerson = personList.getSelectedValue();
+            if (selectedPerson != null) {
+                // Confirm deletion
+                int confirm = JOptionPane.showConfirmDialog(personsFrame,
+                        "Are you sure you want to delete the person: " + selectedPerson.getName() + "?",
+                        "Delete Person", JOptionPane.YES_NO_OPTION);
+
+                if (confirm == JOptionPane.YES_OPTION) {
+                    // Remove person from group
+                    group.removePerson(selectedPerson.getId());
+                    // Remove person from list
+                    personListModel.removeElement(selectedPerson);
+                }
+            }
+        });
+
+        // Show context menu on right-click
+        personList.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                if (evt.isPopupTrigger()) {
+                    showContextMenu(evt);
+                }
+            }
+
+            @Override
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                if (evt.isPopupTrigger()) {
+                    showContextMenu(evt);
+                }
+            }
+
+            private void showContextMenu(java.awt.event.MouseEvent evt) {
+                personList.setSelectedIndex(personList.locationToIndex(evt.getPoint()));
+                contextMenu.show(evt.getComponent(), evt.getX(), evt.getY());
+            }
+        });
 
         // Add selection field to frame
         personsFrame.add(new JScrollPane(personList));
