@@ -77,9 +77,13 @@ public class DatabaseFacade {
         return result;
     }
 
-    public void addGroup(String name) {
-        this.groupDatabase.addEntry(new Group(name));
+    public void addGroup(Group group) {
+        this.groupDatabase.addEntry(group);
     }
+    public void addGroup(String name) {
+        this.addGroup(new Group(name));
+    }
+
     public ArrayList<Group> getGroups() {
         return this.groupDatabase.getAll();
     }
