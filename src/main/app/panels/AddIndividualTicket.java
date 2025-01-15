@@ -120,18 +120,27 @@ public class AddIndividualTicket extends JPanel {
         }
 
         JDialog priceDialog = new JDialog(SwingUtilities.getWindowAncestor(this), "Assign Prices", Dialog.ModalityType.APPLICATION_MODAL);
-        priceDialog.setLayout(new BorderLayout()); // Set a layout manager for the dialog
+        priceDialog.setLayout(new BorderLayout());
 
-        JPanel panel = new JPanel(new GridBagLayout()); // GridBagLayout for the form panel
+        JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Dynamically create rows for each selected debtor
+        // Store a reference to the text fields for validation
+        HashMap<Person, JTextField> priceFields = new HashMap<>();
+
         int row = 0;
         for (Person debtor : selectedDebtors) {
             JLabel label = new JLabel(debtor.getName());
             JTextField priceField = new JTextField(10);
+
+            // Pre-fill the field if a value already exists for this debtor
+            if (debtorPrices.containsKey(debtor)) {
+                priceField.setText(String.valueOf(debtorPrices.get(debtor)));
+            }
+
+            priceFields.put(debtor, priceField); // Store the field for later use
 
             gbc.gridx = 0;
             gbc.gridy = row;
@@ -140,29 +149,41 @@ public class AddIndividualTicket extends JPanel {
             gbc.gridx = 1;
             panel.add(priceField, gbc);
 
-            // Store price on user input
-            priceField.addActionListener(e -> {
-                try {
-                    int price = Integer.parseInt(priceField.getText());
-                    debtorPrices.put(debtor, price);
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(priceDialog, "Invalid price for " + debtor.getName(), "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            });
             row++;
         }
 
         JScrollPane scrollPane = new JScrollPane(panel);
-        priceDialog.add(scrollPane, BorderLayout.CENTER); // Add the scroll pane to the dialog
+        priceDialog.add(scrollPane, BorderLayout.CENTER);
 
         JButton saveButton = new JButton("Save");
-        saveButton.addActionListener(e -> priceDialog.dispose());
-        priceDialog.add(saveButton, BorderLayout.SOUTH); // Add the button at the bottom
+        saveButton.addActionListener(e -> {
+            boolean allValid = true;
+            debtorPrices.clear(); // Reset the prices map
 
+            for (Person debtor : priceFields.keySet()) {
+                JTextField field = priceFields.get(debtor);
+                String text = field.getText().trim();
+                try {
+                    int price = Integer.parseInt(text);
+                    debtorPrices.put(debtor, price);
+                } catch (NumberFormatException ex) {
+                    allValid = false;
+                    JOptionPane.showMessageDialog(priceDialog, "Invalid price for " + debtor.getName(), "Error", JOptionPane.ERROR_MESSAGE);
+                    break;
+                }
+            }
+
+            if (allValid) {
+                priceDialog.dispose();
+            }
+        });
+
+        priceDialog.add(saveButton, BorderLayout.SOUTH);
         priceDialog.pack();
-        priceDialog.setLocationRelativeTo(this); // Center the dialog relative to the parent
+        priceDialog.setLocationRelativeTo(this);
         priceDialog.setVisible(true);
     }
+
 
 
     private class SubmitButtonListener implements ActionListener {
