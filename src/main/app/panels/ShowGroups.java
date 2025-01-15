@@ -57,6 +57,8 @@ public class ShowGroups extends JPanel {
                         "Delete Group", JOptionPane.YES_NO_OPTION);
 
                 if (confirm == JOptionPane.YES_OPTION) {
+                    // Remove all tickets associated
+                    databaseFacade.removeAllTicketsFromGroup(selectedGroup.getId());
                     // Remove group from database
                     databaseFacade.removeGroup(selectedGroup.getId());
                     // Remove group from list

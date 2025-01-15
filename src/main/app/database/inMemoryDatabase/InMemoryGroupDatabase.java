@@ -20,6 +20,7 @@ public class InMemoryGroupDatabase extends AbstractGroupDatabase {
 
     @Override
     public void removeEntry(UUID groupId) {
+        groupMap.get(groupId).removeAllTickets();
         groupMap.remove(groupId);
     }
 

@@ -114,6 +114,11 @@ public class DatabaseFacade {
     public void removeGroup(UUID groupId) {
         this.groupDatabase.removeEntry(groupId);
     }
+    public void removeAllTicketsFromGroup(UUID groupId) {
+        for (UUID ticketId: groupDatabase.getViaUUID(groupId).getTicketsUUIDs()) {
+            this.ticketDatabase.removeEntry(ticketId);
+        }
+    }
     public void removePerson(UUID personId) {
         this.personDatabase.removeEntry(personId);
     }
